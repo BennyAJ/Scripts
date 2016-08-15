@@ -1,0 +1,15 @@
+#/bin/bash
+
+touch /run/btrfs-root/__current/$1/SNAPSHOT
+
+datetime=$(date +%Y.%m.%d-%H:%M:%S)
+
+echo $datetime >> /run/btrfs-root/__current/$1/SNAPSHOT
+
+echo $2 >> /run/btrfs-root/__current/$1/SNAPSHOT
+
+echo $datetime
+
+btrfs subvolume snapshot -r /run/btrfs-root/__current/$1 /run/btrfs-root/__snapshot/$1@$datetime
+
+rm /run/btrfs-root/__current/$1/SNAPSHOT

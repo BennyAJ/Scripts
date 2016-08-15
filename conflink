@@ -1,0 +1,24 @@
+#/bin/bash
+
+# Should be run inside of the dotfiles directory
+for file in * .*; do
+	if [ $file == ".config" ]
+	then
+		for nestedfile in .config/* .config/.*; do
+			path="$(readlink -f $nestedfile)"
+			nestedfile="$(basename $nestedfile)"
+			if [[ $nestedfile != "." ]] && [[ $nestedfile != ".." ]] && [[ $file != "*" ]]
+			then
+				echo $path
+				ln -s $path ~/.config
+			fi
+		done
+	else
+		if [[ $file != "." ]] && [[ $file != ".." ]] && [[ $file != "*" ]]
+		then
+			path="$(readlink -f $file)"
+			echo $path
+			ln -s $path ~
+		fi
+	fi
+done
