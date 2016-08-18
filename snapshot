@@ -1,15 +1,18 @@
 #/bin/bash
 
+# Create file to hold snapshot info
 touch /run/btrfs-root/__current/$1/SNAPSHOT
 
 datetime=$(date +%Y.%m.%d-%H:%M:%S)
 
+# Store date, time, and description in snapshot file
 echo $datetime >> /run/btrfs-root/__current/$1/SNAPSHOT
-
 echo $2 >> /run/btrfs-root/__current/$1/SNAPSHOT
 
 echo $datetime
 
+# Create snapshot with name, date, and time in the name
 btrfs subvolume snapshot -r /run/btrfs-root/__current/$1 /run/btrfs-root/__snapshot/$1@$datetime
 
+# Remove the created info file
 rm /run/btrfs-root/__current/$1/SNAPSHOT
