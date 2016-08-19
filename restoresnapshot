@@ -1,0 +1,14 @@
+#/bin/bash
+
+#########################################################################################
+# This script copies a selected snapshot to ROOT, replacing the old ROOT subvolume      #
+#########################################################################################
+
+# Remove the old ROOT subvolume if it is present
+if [ -d /run/btrfs-root/__current/ROOT ]
+then
+    btrfs subvolume delete /run/btrfs-root/__current/ROOT
+fi
+
+# Create a rw snapshot of the selected snapshot and store it at ROOT
+btrfs subvolume snapshot $1 /run/btrfs-root/__current/ROOT

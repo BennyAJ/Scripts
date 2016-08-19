@@ -1,5 +1,9 @@
 #/bin/bash
 
+#########################################################################################################
+# This script creates a snapshot of the inputted subvolume with a timestamp and an inputted description #
+#########################################################################################################
+
 # Create file to hold snapshot info
 touch /run/btrfs-root/__current/$1/SNAPSHOT
 

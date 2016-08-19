@@ -1,0 +1,15 @@
+#/bin/bash
+
+#########################################################################################
+# This script copies a selected snapshot to TEMPROOT where it can be booted from rEFInd #
+# WARNING - /var/lib is currently mounted from ROOT so some programs may malfunction    #
+#########################################################################################
+
+# Remove the old TEMPROOT subvolume if it is present
+if [ -d /run/btrfs-root/__current/TEMPROOT ]
+then
+    btrfs subvolume delete /run/btrfs-root/__current/TEMPROOT
+fi
+
+# Create a rw snapshot of the selected snapshot and store it at TEMPROOT
+btrfs subvolume snapshot $1 /run/btrfs-root/__current/TEMPROOT
