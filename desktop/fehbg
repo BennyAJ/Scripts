@@ -1,0 +1,2 @@
+#!/bin/sh
+feh  --bg-scale '/home/benny/Wallpapers/BastionWalkingWoods.jpg' 
