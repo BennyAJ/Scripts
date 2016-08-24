@@ -1,0 +1,14 @@
+#/bin/bash
+
+#echo "Setting up network"
+qemu-net eno1
+
+#echo "Binding guest card"
+vfio-bind 0000:02:00.0 0000:02:00.1
+
+#echo "Binding host card"
+nvidia-bind 0000:01:00.0
+
+#echo "Claiming ssd"
+chown benny /dev/sda1
+
