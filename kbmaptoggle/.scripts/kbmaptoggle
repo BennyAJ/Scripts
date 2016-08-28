@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if setxkbmap -query | grep -q 'dvp'
+then
+    setxkbmap us -option caps:swapescape
+else
+    setxkbmap dvp -option caps:swapescape
+fi
