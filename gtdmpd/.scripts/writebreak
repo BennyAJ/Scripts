@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# This script creates or deletes a temp file
+# to signify whether gtd is in a break cycle or not
+
+if [ -f "/tmp/gtdbreak" ]
+then
+    rm /tmp/gtdbreak
+else
+    touch /tmp/gtdbreak
+fi

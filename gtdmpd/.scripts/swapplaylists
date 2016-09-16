@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This script toggles between two playlists
+# It takes two playlist names as arguments (Study then Break) 
+# The tmp file is created and deleted by the writebreak script 
+
+if [ -f /tmp/gtdbreak ]
+then
+    mpc -q clear
+    mpc -q load $2
+    mpc -q play
+else
+    mpc -q clear
+    mpc -q load $1
+    mpc -q play
+fi 

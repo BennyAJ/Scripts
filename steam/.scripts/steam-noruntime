@@ -1,0 +1,7 @@
+#!/bin/bash
+
+####################################################
+# This script launches Steam with native libraries #
+####################################################
+
+STEAM_RUNTIME=0 steam
