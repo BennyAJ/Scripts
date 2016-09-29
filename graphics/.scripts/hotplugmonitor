@@ -26,20 +26,33 @@ then
         xrandr --output $oldscreen --off
     fi
     bspc monitor $laptopscreen -d 1 2 3 4 5 6
+    bspc desktop -f 4
+    bspc desktop -m $laptopscreen
+    bspc desktop -f 5
+    bspc desktop -m $laptopscreen
+    bspc desktop -f 6
+    bspc desktop -m $laptopscreen
 else
 
     if [ $lidstate == "open" ]
     then
         echo "Using both internal and external monitors"
         xrandr --output $laptopscreen --auto --output $externalscreen --auto --$direction $laptopscreen
-        bspc monitor $externalscreen -d 1 2 3
-        bspc monitor $laptopscreen -d 4 5 6
+        bspc desktop -f 4
+        bspc desktop -m $laptopscreen
+        bspc desktop -f 5
+        bspc desktop -m $laptopscreen
+        bspc desktop -f 6
+        bspc desktop -m $laptopscreen
     else
         echo "Using external monitor"
-        #bspc wm --add-monitor $externalscreen 1920x1080+0+0
-        #bspc wm --remove-monitor $laptopscreen
         xrandr --output $externalscreen --auto
         xrandr --output $laptopscreen --off
-        bspc monitor $externalscreen -d 1 2 3 4 5 6
+        bspc desktop -f 4
+        bspc desktop -m $externalscreen
+        bspc desktop -f 5
+        bspc desktop -m $externalscreen
+        bspc desktop -f 6
+        bspc desktop -m $externalscreen
     fi
 fi
