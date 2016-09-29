@@ -18,41 +18,82 @@ then
     echo "Using internal monitor"
     oldscreen=$(bspc query -M | awk '{print $1 }' | sed -e "s/$laptopscreen//g" | xargs -n 1)
     echo "OldScreen = $oldscreen"
+    echo "Before removing old screen"
+    bspc query -D
     if [ -z $oldscreen ]
     then
         echo "There is no monitor to disable"
     else
         xrandr --output $laptopscreen --auto
         xrandr --output $oldscreen --off
+        echo "Before adding Desktop to old screen"
+        bspc query -D
+        bspc monitor $oldscreen -a Desktop
+        bspc monitor $oldscreen -o 1 2 3 Desktop
+
+        echo "Before moving desktops to laptop"
+        bspc query -D
+        for i in {1..6}
+        do
+            bspc desktop $i -m $laptopscreen
+        done
+        
+        echo "Before removing bspwm copy of old screen"
+        bspc query -D
+        bspc wm -r $oldscreen
+
+        # Cleanup default desktops
+        bspc wm -a temp 0x0+0+0
+        for i in $(bspc query -D | grep Desktop)
+        do 
+            echo $i
+            bspc desktop $i -m temp
+        done
+        bspc wm -r temp
+
+        echo "Before reordering on laptopscreen"
+        bspc query -D
+        bspc monitor eDP1 -o 1 2 3 4 5 6
+        echo "After reordering on laptopscreen"
+        bspc query -D
     fi
-    bspc monitor $laptopscreen -d 1 2 3 4 5 6
-    bspc desktop -f 4
-    bspc desktop -m $laptopscreen
-    bspc desktop -f 5
-    bspc desktop -m $laptopscreen
-    bspc desktop -f 6
-    bspc desktop -m $laptopscreen
 else
 
     if [ $lidstate == "open" ]
     then
         echo "Using both internal and external monitors"
         xrandr --output $laptopscreen --auto --output $externalscreen --auto --$direction $laptopscreen
-        bspc desktop -f 4
-        bspc desktop -m $laptopscreen
-        bspc desktop -f 5
-        bspc desktop -m $laptopscreen
-        bspc desktop -f 6
-        bspc desktop -m $laptopscreen
+
+        for i in {1..3}
+        do
+            bspc desktop $i -m $externalscreen
+        done
+
+        for i in {4..6}
+        do
+            bspc desktop $i -m $laptopscreen
+        done
+
     else
         echo "Using external monitor"
         xrandr --output $externalscreen --auto
         xrandr --output $laptopscreen --off
-        bspc desktop -f 4
-        bspc desktop -m $externalscreen
-        bspc desktop -f 5
-        bspc desktop -m $externalscreen
-        bspc desktop -f 6
-        bspc desktop -m $externalscreen
+        bspc monitor $laptopscreen -a temp
+
+        for i in {1..6}
+        do
+            bspc desktop $i -m $externalscreen
+        done
+
+        bspc wm -r $laptopscreen
     fi
 fi
+
+# Cleanup default desktops
+bspc wm -a temp 0x0+0+0
+for i in $(bspc query -D | grep Desktop)
+do 
+    echo $i
+    bspc desktop $i -m temp
+done
+bspc wm -r temp
