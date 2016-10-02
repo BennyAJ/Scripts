@@ -1,6 +1,6 @@
 #!/bin/bash
 
-qemu-system-x86_64 -enable-kvm -m 4096 -cpu host \
+qemu-system-x86_64 -enable-kvm -m 8192 -cpu host \
 -net nic -net user,hostfwd=tcp::5555-:22 \
 -smp 2,sockets=1,cores=2,threads=1 \
 -soundhw hda \
