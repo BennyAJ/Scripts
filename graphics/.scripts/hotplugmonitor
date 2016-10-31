@@ -2,7 +2,8 @@
 
 #######################################################################################
 # This script is designed to automatically detect and display to one external monitor #
-# it may be updated later to support multiple monitors if I have a use for it         #
+# it may be updated later to support multiple monitors if I have a use for it.        #
+# This script now has a dependency on jq to operate properly                          #
 #######################################################################################
 export DISPLAY=:0
 export XAUTHORITY=/home/benny/.Xauthority
@@ -16,7 +17,7 @@ externalscreen=$(xrandr | grep -w connected | awk '{print $1 }' | sed -e "s/$lap
 if [ -z $externalscreen ]
 then
     echo "Using internal monitor"
-    oldscreen=$(bspc query -M | awk '{print $1 }' | sed -e "s/$laptopscreen//g" | xargs -n 1)
+    oldscreen=$(bspc query -M |  bspc query -T -m $1 | jq .name | tr -d '"') | sed -e "s/$laptopscreen//g | xargs -n 1"
     echo "OldScreen = $oldscreen"
     echo "Before removing old screen"
     bspc query -D
@@ -27,6 +28,7 @@ then
         xrandr --output $laptopscreen --auto
         xrandr --output $oldscreen --off
         echo "Before adding Desktop to old screen"
+        touch /home/benny/pleasedontturnoffmyscreen
         bspc query -D
         bspc monitor $oldscreen -a Desktop
         bspc monitor $oldscreen -o 1 2 3 Desktop
