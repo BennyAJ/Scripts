@@ -9,7 +9,7 @@ export DISPLAY=:0
 export XAUTHORITY=/home/benny/.Xauthority
 
 laptopscreen=eDP1
-externalscreen=DP1-1
+externalscreen=HDMI1
 direction=left-of
 lidstate=$(cat /proc/acpi/button/lid/LID0/state | awk '{print $2}')
 
@@ -45,6 +45,7 @@ else
     for i in {1..6}
     do
         bspc desktop $i -m $externalscreen
+        echo "MOVING DESKTOP $i to $externalscreen"
     done
 
     bspc monitor $laptopscreen -r 
