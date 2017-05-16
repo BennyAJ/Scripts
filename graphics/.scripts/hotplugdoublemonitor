@@ -1,0 +1,88 @@
+#!/bin/bash
+
+#######################################################################################
+# This script is designed to automatically detect and display to one external monitor #
+# it may be updated later to support multiple monitors if I have a use for it.        #
+# This script now has a dependency on jq to operate properly due to a bspwm update    #
+#######################################################################################
+export DISPLAY=:0
+export XAUTHORITY=/home/benny/.Xauthority
+
+laptopscreen=eDP1
+verticalscreen=DP1-2
+horizontalscreen=DP1-1
+direction=left-of
+lidstate=$(cat /proc/acpi/button/lid/LID0/state | awk '{print $2}')
+
+if [ $lidstate == "open" ]
+then
+    echo "Using internal monitor"
+    xrandr --output $laptopscreen --auto
+    xrandr --output $verticalscreen --off
+    bspc monitor $verticalscreen -a Desktop
+    bspc monitor $horizontalscreen -a Desktop2
+
+    for i in {1..6}
+    do
+        bspc desktop $i -m $laptopscreen
+    done
+    
+    bspc monitor $verticalscreen -r
+    bspc monitor $horizontalscreen -r
+
+    # Cleanup default desktops
+    bspc wm -a temp 0x0+0+0
+    for i in $(bspc query -D | grep Desktop)
+    do 
+        bspc desktop $i -m temp
+    done
+
+    for i in $(bspc query -D | grep Desktop2)
+    do 
+        bspc desktop $i -m temp
+    done
+
+    bspc monitor temp -r
+
+    bspc monitor $laptopscreen -o 1 2 3 4 5 6
+else
+    echo "Using external monitors"
+    xrandr --output $verticalscreen --auto --rotate left
+    xrandr --output $horizontalscreen --auto --left-of $verticalscreen
+    xrandr --output $laptopscreen --off
+    bspc monitor $laptopscreen -a Desktop
+
+    for i in {1..3}
+    do
+        bspc desktop $i -m $horizontalscreen
+        echo "MOVING DESKTOP $i to $horizontalscreen"
+    done
+
+    for i in {4..6}
+    do
+        bspc desktop $i -m $verticalscreen
+        echo "MOVING DESKTOP $i to $verticalscreen"
+    done
+
+    bspc monitor $laptopscreen -r 
+fi
+
+# Cleanup default desktops
+bspc wm -a temp 0x0+0+0
+for i in $(bspc query -D)
+do 
+    currentdesktop=$(bspc query -T -d $i | jq .name | tr -d '"')
+    if grep -q Desktop <<< $currentdesktop
+    then
+        echo "Deleting $currentdesktop"
+        bspc desktop $i -m temp
+    fi
+
+    currentdesktop=$(bspc query -T -d $i | jq .name | tr -d '"')
+    if grep -q Desktop2 <<< $currentdesktop
+    then
+        echo "Deleting $currentdesktop"
+        bspc desktop $i -m temp
+    fi
+done
+bspc monitor temp -r
