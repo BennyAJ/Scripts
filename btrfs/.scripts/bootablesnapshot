@@ -16,4 +16,4 @@ fi
 btrfs subvolume snapshot $1 /run/btrfs-root/__current/$subvol
 
 # Alters fstab file to match new subvolume
-sed -i -e "s/ROOT/$subvol/g" /run/btrfs-root/__current/$subvol/etc/fstab
+sed -i -e "s/root/$subvol/g" /run/btrfs-root/__current/$subvol/etc/fstab

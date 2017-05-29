@@ -4,7 +4,7 @@
 # This script copies a selected snapshot to root, replacing the old root subvolume      #
 #########################################################################################
 
-root=ROOT
+root=root
 
 # Remove the old root subvolume if it is present
 if [ -d /run/btrfs-root/__current/$root ]
