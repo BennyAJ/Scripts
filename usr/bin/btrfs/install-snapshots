@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/bin/snapshot root "Install Program"
+/usr/bin/snapshot home "Install Program"
