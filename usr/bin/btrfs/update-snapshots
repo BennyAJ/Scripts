@@ -1,3 +1,0 @@
-#!/bin/sh
-/usr/bin/snapshot root "Update Programs"
-/usr/bin/snapshot home "Update Programs"

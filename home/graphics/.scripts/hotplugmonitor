@@ -9,9 +9,10 @@ export DISPLAY=:0
 export XAUTHORITY=/home/benny/.Xauthority
 
 laptopscreen=eDP1
-externalscreen=HDMI1
+externalscreen=DP1-1
 direction=left-of
-lidstate=$(cat /proc/acpi/button/lid/LID0/state | awk '{print $2}')
+#lidstate=$(cat /proc/acpi/button/lid/LID0/state | awk '{print $2}')
+lidstate=true
 
 if [ $lidstate == "open" ]
 then
